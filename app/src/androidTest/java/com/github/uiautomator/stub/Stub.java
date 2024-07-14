@@ -53,6 +53,11 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * Use JUnit test to start the uiautomator jsonrpc server.
  *
@@ -65,7 +70,7 @@ public class Stub {
     // http://www.jsonrpc.org/specification#error_object
     private static final int CUSTOM_ERROR_CODE = -32001;
 
-    int PORT = 9008;
+    int PORT = ConfigReader.getPortFromConfig();
     AutomatorHttpServer server = new AutomatorHttpServer(PORT);
 
     @Before
@@ -158,5 +163,25 @@ public class Stub {
             }
             Thread.sleep(500);
         }
+    }
+}
+
+
+public class ConfigReader {
+    public static int getPortFromConfig() {
+        Properties properties = new Properties();
+        int port = 9008;
+        try {
+            File configFile = new File("/sdcard/Android/data/com.github.uiautomator/files/config.properties");
+            if (configFile.exists()) {
+                FileInputStream inputStream = new FileInputStream(configFile);
+                properties.load(inputStream);
+                port = Integer.parseInt(properties.getProperty("port", "9008"));
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return port;
     }
 }
