@@ -165,23 +165,3 @@ public class Stub {
         }
     }
 }
-
-
-public class ConfigReader {
-    public static int getPortFromConfig() {
-        Properties properties = new Properties();
-        int port = 9008;
-        try {
-            File configFile = new File("/sdcard/Android/data/com.github.uiautomator/files/config.properties");
-            if (configFile.exists()) {
-                FileInputStream inputStream = new FileInputStream(configFile);
-                properties.load(inputStream);
-                port = Integer.parseInt(properties.getProperty("port", "9008"));
-                inputStream.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return port;
-    }
-}
